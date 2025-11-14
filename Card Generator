@@ -274,7 +274,7 @@
           <div class="title" id="cardTitle">The Endless Knot</div>
           <div class="art" id="artArea">
             <!-- uploaded image will be placed here -->
-            <img id="artImage" src="" alt="" style="display:none">
+            <img id="artImage" style="display:none" alt="">
             <!-- symbol overlay: simple knot-like SVG -->
             <div class="symbol" aria-hidden="true">
               <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
@@ -469,6 +469,51 @@
 
   // allow double-click to reset rotation
   viewport.addEventListener('dblclick', () => setRotation(0));
+<script>
+async function recordVideo() {
+  const cardEl = document.getElementById('card');
+
+  // Buat stream dari element
+  const stream = cardEl.captureStream(30); // 30 fps
+  const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+
+  let chunks = [];
+
+  recorder.ondataavailable = e => chunks.push(e.data);
+  recorder.onstop = e => {
+    const blob = new Blob(chunks, { type: 'video/webm' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'card-video.webm';
+    a.click();
+
+  };
+
+  recorder.start();
+
+  // putar kartu 360° selama 3 detik
+  let start = performance.now();
+  function animate(now) {
+    let progress = now - start;
+    let angle = (progress / 3000) * 360;
+    setRotation(angle);
+
+    if (progress < 3000) requestAnimationFrame(animate);
+    else recorder.stop();
+  }
+  requestAnimationFrame(animate);
+}
+
+// tombol save video
+const btnVideo = document.createElement('button');
+btnVideo.textContent = "Save as Video";
+btnVideo.className = "btn btn-ghost";
+btnVideo.style.marginTop = "10px";
+document.getElementById("controlsPanel").appendChild(btnVideo);
+
+btnVideo.addEventListener("click", recordVideo);
 </script>
 </body>
 </html>
