@@ -274,7 +274,7 @@
           <div class="title" id="cardTitle">The Endless Knot</div>
           <div class="art" id="artArea">
             <!-- uploaded image will be placed here -->
-            <img id="artImage" src="" alt="" style="display:none">
+            <img id="artImage" style="display:none" alt="">
             <!-- symbol overlay: simple knot-like SVG -->
             <div class="symbol" aria-hidden="true">
               <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
