@@ -25,7 +25,7 @@
     color:#e9f7f2;
   }
 
-  /* panel */
+  /* Panel */
   .panel{
     width:360px;
     background:rgba(255,255,255,0.04);
@@ -43,18 +43,21 @@
   }
   label{display:block;font-size:13px;margin-top:10px;color:#cbe9d9}
   input[type="text"], textarea{
-    width:100%; padding:8px 10px;
+    width:100%;
+    padding:8px 10px;
     border-radius:8px;
     border:1px solid rgba(255,255,255,0.06);
     background: rgba(0,0,0,0.25);
-    color:#e8fff6;
+    color: #e8fff6;
     font-size:14px;
     margin-top:6px;
     outline:none;
   }
   textarea{min-height:90px; resize:vertical;}
+  .row{display:flex;gap:8px}
   .btn{
     margin-top:12px;
+    display:inline-block;
     padding:10px 12px;
     border-radius:10px;
     cursor:pointer;
@@ -64,37 +67,65 @@
   }
   .btn-primary{background:linear-gradient(180deg,#ff84d0,#ff6bb3); color:#1a0612}
   .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.08); color:#cfeee1}
+  .small{font-size:13px;padding:8px 10px;border-radius:8px;}
 
+  /* Preview container */
   .stage{
     width:var(--card-w);
     perspective:1200px;
     display:flex;
-    flex-direction:column;
     align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    gap:12px;
   }
 
-  .card{
+  .card-viewport{
     width:var(--card-w);
     height:var(--card-h);
-    border-radius:18px;
     position:relative;
     transform-style:preserve-3d;
+  }
+
+  /* The card itself (3D) */
+  .card{
+    width:100%;
+    height:100%;
+    border-radius:18px;
+    position:absolute;
+    left:0; top:0;
+    transform-style: preserve-3d;
     transition: transform 200ms linear;
     cursor:grab;
   }
+  .card:active{ cursor:grabbing; }
+
+  /* simple front face design */
   .card-face{
     position:absolute;
     inset:0;
-    backface-visibility:hidden;
+    backface-visibility: hidden;
     border-radius:18px;
     overflow:hidden;
     display:flex;
     flex-direction:column;
     justify-content:space-between;
-    background:linear-gradient(180deg,#0b2421 0%, #081a16 100%);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 2px 6px rgba(0,0,0,0.5);
+    background: linear-gradient(180deg,#0b2421 0%, #081a16 100%);
   }
 
-  .frame{flex:1;padding:14px;display:flex;flex-direction:column;gap:10px}
+  /* framed look */
+  .frame{
+    padding:14px;
+    border-radius:16px;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    box-shadow: inset 0 0 0 6px rgba(255,182,210,0.08);
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
 
   .title{
     height:46px;
@@ -107,156 +138,338 @@
     font-family:"Playfair Display";
     font-weight:700;
     font-size:18px;
+    letter-spacing:1px;
+    box-shadow:0 4px 8px rgba(255,120,180,0.12) inset;
   }
 
   .art{
-    flex:1;border-radius:10px;margin:8px 4px;overflow:hidden;display:flex;align-items:center;justify-content:center;
+    flex:1 1 auto;
+    border-radius:10px;
+    margin:8px 4px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+    background: radial-gradient(circle at center, rgba(52,255,120,0.08), rgba(0,0,0,0.5));
   }
   .art img{
     width:100%;
     height:100%;
     object-fit:cover;
-    display:none;
+    filter:contrast(1.05) saturate(1.25);
   }
+  .art .symbol{
+    position:absolute;
+    width:56%;
+    height:56%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    pointer-events:none;
+    mix-blend-mode:screen;
+    opacity:0.95;
+  }
+  .symbol svg{ width:100%; height:100%; }
 
   .desc{
     margin:8px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
     border-radius:10px;
     padding:10px;
     font-size:13px;
     color:#f3f7f2;
     min-height:60px;
+    line-height:1.25;
   }
 
   .footer{
-    display:flex;justify-content:space-between;align-items:center;padding:10px 6px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:10px 6px;
+    gap:8px;
   }
-  .chip{font-size:12px;padding:6px 8px;border-radius:8px;background:rgba(0,0,0,0.25)}
-  .rarity{background:linear-gradient(180deg,#fbe7ff,#f1b3f0);color:#21031b;font-weight:700}
+  .chip{font-size:12px;padding:6px 8px;border-radius:8px;background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.03)}
+  .rarity{background:linear-gradient(180deg,#fbe7ff,#f1b3f0); color:#21031b; font-weight:700}
+
+  /* reflection */
+  .reflection{
+    width:var(--card-w);
+    height:30px;
+    opacity:0.12;
+    filter:blur(6px);
+    transform:translateY(-6px) scaleY(-1);
+    background:linear-gradient(90deg, transparent, rgba(255,0,150,0.08), transparent);
+    border-radius:30px;
+  }
+
+  /* controls below preview */
+  .controls{
+    width:var(--card-w);
+    display:flex;
+    gap:8px;
+    align-items:center;
+  }
+
+  input[type=file]{display:none}
+
+  .meta{
+    font-size:12px;
+    color:#cfeee1;
+    opacity:0.9;
+  }
+
+  /* small responsive */
+  @media (max-width:920px){
+    body{flex-direction:column}
+    .panel{width:92%}
+    .stage{width:92%}
+  }
 </style>
 </head>
 <body>
 
+<!-- Left control panel -->
 <div class="panel" id="controlsPanel">
   <h2>Card Generator</h2>
 
-  <label>Input Name</label>
-  <input id="inputName" type="text" value="The Endless Knot">
+  <label>Input Name (header)</label>
+  <input id="inputName" type="text" placeholder="The Endless Knot" value="The Endless Knot">
 
   <label>Input Description</label>
-  <textarea id="inputDesc">An ancient symbol of interconnectedness...</textarea>
+  <textarea id="inputDesc" placeholder="An ancient of interconnectedness and infinite possibility...">An ancient of interconnectedness and Infinite possibility. Grants untold power to those unravel Its mysteries.</textarea>
 
-  <label>Upload Photo</label>
-  <label class="btn btn-ghost" for="fileUpload">Choose image…</label>
-  <input id="fileUpload" type="file" accept="image/*" style="display:none">
-  <button id="resetImage" class="btn btn-ghost">Reset</button>
+  <label>Upload Photo (art area)</label>
+  <div style="display:flex;gap:8px;align-items:center">
+    <label class="btn small btn-ghost" for="fileUpload">Choose image…</label>
+    <input id="fileUpload" type="file" accept="image/*">
+    <button id="resetImage" class="btn small btn-ghost">Reset</button>
+  </div>
 
-  <button id="btnGenerate" class="btn btn-primary">Generate</button>
-  <button id="btnDownload" class="btn btn-ghost">Download PNG</button>
+  <div style="display:flex;gap:8px;margin-top:12px;">
+    <button id="btnGenerate" class="btn btn-primary">Generate</button>
+    <button id="btnDownload" class="btn btn-ghost">Download PNG</button>
+  </div>
+
+  <label style="margin-top:12px">Rotation</label>
+  <div style="display:flex;gap:8px;align-items:center">
+    <input id="rotRange" type="range" min="0" max="360" value="0" style="flex:1">
+    <button id="autoToggle" class="btn small btn-ghost">Auto: Off</button>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+    <div class="meta">Drag card to rotate | Slider or Auto-rotate</div>
+    <div style="font-size:12px;color:#bfeee0">Preview live</div>
+  </div>
+
 </div>
 
+<!-- Preview / stage -->
 <div class="stage">
-  <div class="card" id="card">
-    <div class="card-face">
-      <div class="frame">
-        <div class="title" id="cardTitle">The Endless Knot</div>
+  <div class="card-viewport" id="viewport">
+    <div class="card" id="card">
+      <div class="card-face">
+        <div class="frame">
+          <div class="title" id="cardTitle">The Endless Knot</div>
+          <div class="art" id="artArea">
+            <!-- uploaded image will be placed here -->
+            <img id="artImage" src="" alt="" style="display:none">
+            <!-- symbol overlay: simple knot-like SVG -->
+            <div class="symbol" aria-hidden="true">
+              <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+                <g fill="none" stroke="#a9ffd6" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10 50c0-22 18-40 40-40s40 18 40 40-18 40-40 40S10 72 10 50z" opacity="0.08" />
+                  <path d="M30 30 L50 30 L70 50 L50 70 L30 70 L10 50 L30 30 Z" stroke="#cdfbdc" stroke-width="6" fill="#baffd8" opacity="0.06"/>
+                  <path d="M35 30 L65 60 M65 30 L35 60" stroke="#e8fff6" stroke-width="6" opacity="0.9"/>
+                </g>
+              </svg>
+            </div>
+          </div>
 
-        <div class="art">
-          <img id="artImage" alt="">
-        </div>
+          <div class="desc" id="cardDesc">An ancient of interconnectedness and Infinite possibility. Grants untold power to those unravel Its mysteries.</div>
 
-        <div class="desc" id="cardDesc">An ancient symbol...</div>
-
-        <div class="footer">
-          <div class="chip rarity">★ EPIC</div>
-          <div class="chip">TYPE: ARTIFACT</div>
+          <div class="footer">
+            <div class="chip rarity">★ EPIC</div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <div class="chip">TYPE: ARTIFACT</div>
+              <div class="chip">99</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
+  <div class="reflection" aria-hidden="true"></div>
+
+  <div class="controls" style="justify-content:center">
+    <div style="display:flex;gap:8px;align-items:center">
+      <label class="meta">Angle:</label>
+      <div id="angleDisplay" class="meta">0°</div>
+    </div>
+  </div>
 </div>
 
+<!-- html2canvas CDN for screenshot/download -->
 <script src="https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <script>
-const inputName = document.getElementById('inputName');
-const inputDesc = document.getElementById('inputDesc');
-const fileUpload = document.getElementById('fileUpload');
-const artImage = document.getElementById('artImage');
-const cardTitle = document.getElementById('cardTitle');
-const cardDesc = document.getElementById('cardDesc');
-const card = document.getElementById('card');
+  // DOM refs
+  const inputName = document.getElementById('inputName');
+  const inputDesc = document.getElementById('inputDesc');
+  const fileUpload = document.getElementById('fileUpload');
+  const artImage = document.getElementById('artImage');
+  const artArea = document.getElementById('artArea');
+  const cardTitle = document.getElementById('cardTitle');
+  const cardDesc = document.getElementById('cardDesc');
+  const btnGenerate = document.getElementById('btnGenerate');
+  const btnDownload = document.getElementById('btnDownload');
+  const rotRange = document.getElementById('rotRange');
+  const autoToggle = document.getElementById('autoToggle');
+  const angleDisplay = document.getElementById('angleDisplay');
 
-function applyGenerate(){
-  cardTitle.textContent = inputName.value || 'Unnamed';
-  cardDesc.textContent = inputDesc.value || '';
-}
-document.getElementById('btnGenerate').onclick = applyGenerate;
+  const card = document.getElementById('card');
+  const viewport = document.getElementById('viewport');
 
-fileUpload.addEventListener('change', e => {
-  const file = e.target.files && e.target.files[0];
-  if(!file) return;
-  const url = URL.createObjectURL(file);
-  artImage.src = url;
-  artImage.style.display = 'block';
-});
+  // state
+  let rotation = 0;
+  let autoRotating = false;
+  let autoId = null;
+  let isDragging = false;
+  let dragStartX = 0;
+  let startRot = 0;
 
-document.getElementById('resetImage').onclick = () => {
-  artImage.src = '';
-  artImage.style.display = 'none';
-};
-
-document.getElementById('btnDownload').onclick = async () => {
-  const canvas = await html2canvas(card, { scale:2, useCORS:true });
-  const url = canvas.toDataURL("image/png");
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "card.png";
-  a.click();
-};
-
-/* ============================
-      SAVE AS VIDEO FEATURE
-   ============================*/
-function recordVideo() {
-  const stream = card.captureStream(30); // 30 FPS
-  const recorder = new MediaRecorder(stream, { mimeType:"video/webm" });
-  let chunks = [];
-
-  recorder.ondataavailable = e => chunks.push(e.data);
-  recorder.onstop = () => {
-    const blob = new Blob(chunks, { type:"video/webm" });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "card-rotation.webm";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  recorder.start();
-
-  let start = performance.now();
-  function rotate(now){
-    let progress = now - start;
-    card.style.transform = `rotateY(${(progress/3000)*360}deg)`;
-
-    if(progress < 3000) requestAnimationFrame(rotate);
-    else recorder.stop();
+  // generate function: apply inputs to preview
+  function applyGenerate(){
+    cardTitle.textContent = inputName.value || 'Unnamed';
+    cardDesc.textContent = inputDesc.value || '';
   }
-  requestAnimationFrame(rotate);
-}
 
-let btnVideo = document.createElement("button");
-btnVideo.textContent = "Save as Video";
-btnVideo.className = "btn btn-ghost";
-btnVideo.onclick = recordVideo;
-document.getElementById("controlsPanel").appendChild(btnVideo);
+  btnGenerate.addEventListener('click', () => {
+    applyGenerate();
+  });
 
-applyGenerate();
+  // file upload preview
+  fileUpload.addEventListener('change', (e) => {
+    const f = e.target.files && e.target.files[0];
+    if(!f) return;
+    const url = URL.createObjectURL(f);
+    artImage.src = url;
+    artImage.style.display = 'block';
+    artImage.onload = () => {
+      // NOTE: do NOT revoke the object URL here — html2canvas will need it when exporting.
+      // URL.revokeObjectURL(url);
+    }
+  });
+
+  document.getElementById('resetImage').addEventListener('click', () => {
+    artImage.src = '';
+    artImage.style.display = 'none';
+  });
+
+  // rotation handling (slider)
+  function setRotation(angle){
+    rotation = ((angle % 360) + 360) % 360;
+    card.style.transform = `rotateY(${rotation}deg)`;
+    rotRange.value = rotation;
+    angleDisplay.textContent = Math.round(rotation) + '°';
+  }
+
+  rotRange.addEventListener('input', (e) => {
+    setRotation(Number(e.target.value));
+  });
+
+  // auto-rotate
+  autoToggle.addEventListener('click', () => {
+    autoRotating = !autoRotating;
+    autoToggle.textContent = 'Auto: ' + (autoRotating ? 'On' : 'Off');
+    if(autoRotating){
+      startAutoRotate();
+    } else {
+      stopAutoRotate();
+    }
+  });
+
+  function startAutoRotate(){
+    if(autoId) cancelAnimationFrame(autoId);
+    let last = performance.now();
+    function step(now){
+      const dt = now - last;
+      last = now;
+      setRotation(rotation + dt * 0.03); // ~0.03 deg/ms => ~1.8deg/s
+      autoId = requestAnimationFrame(step);
+    }
+    autoId = requestAnimationFrame(step);
+  }
+  function stopAutoRotate(){
+    if(autoId) cancelAnimationFrame(autoId);
+    autoId = null;
+  }
+
+  // mouse drag rotation
+  viewport.addEventListener('pointerdown', (e) => {
+    isDragging = true;
+    dragStartX = e.clientX;
+    startRot = rotation;
+    viewport.setPointerCapture(e.pointerId);
+  });
+  viewport.addEventListener('pointermove', (e) => {
+    if(!isDragging) return;
+    const dx = e.clientX - dragStartX;
+    setRotation(startRot + dx * 0.6); // sensitivity
+  });
+  viewport.addEventListener('pointerup', (e) => {
+    isDragging = false;
+    try{ viewport.releasePointerCapture(e.pointerId); } catch(e){}
+  });
+  viewport.addEventListener('pointerleave', (e) => {
+    isDragging = false;
+  });
+
+  // keyboard shortcuts (optional)
+  window.addEventListener('keydown', (e) => {
+    if(e.key === 'ArrowLeft') setRotation(rotation - 5);
+    if(e.key === 'ArrowRight') setRotation(rotation + 5);
+  });
+
+  // Download using html2canvas
+  btnDownload.addEventListener('click', async () => {
+    // Temporarily clear drag cursor and any transforms on parent for correct render
+    const origCursor = card.style.cursor;
+    card.style.cursor = 'default';
+
+    // html2canvas on the frame area (we want the card element)
+    // Use scale 2 for better resolution
+    try{
+      const canvas = await html2canvas(card, {
+        scale: 2,
+        backgroundColor: null,
+        useCORS: true,
+        allowTaint: true,
+        logging: false
+      });
+      const dataUrl = canvas.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      const safeName = (inputName.value || 'card').replace(/\s+/g,'_').toLowerCase();
+      a.download = `${safeName}.png`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch(err){
+      alert('Gagal mendownload gambar: ' + err.message);
+    } finally {
+      card.style.cursor = origCursor;
+    }
+  });
+
+  // init defaults
+  applyGenerate();
+  setRotation(0);
+
+  // allow double-click to reset rotation
+  viewport.addEventListener('dblclick', () => setRotation(0));
 </script>
-
 </body>
 </html>
